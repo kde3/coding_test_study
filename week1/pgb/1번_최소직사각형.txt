@@ -1,0 +1,12 @@
+def solution(sizes):
+    
+    srt_sizes = [sorted(x,reverse=True) for x in sizes]
+    print(srt_sizes)
+    
+    srt_x = max([x[0] for x in srt_sizes])
+    srt_y = max([y[1] for y in srt_sizes])
+    
+    
+    answer = srt_x * srt_y
+    return answer
+

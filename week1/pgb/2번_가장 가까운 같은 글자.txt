@@ -1,0 +1,13 @@
+def solution(s):
+    
+    chrs = list(set(list(s)))
+    d = {x : -1 for x in chrs}
+    
+    print(d)
+    answer = []
+    
+    for i in range(len(s)):
+        answer.append(i-d[s[i]] if d[s[i]] != -1 else d[s[i]])
+        d[s[i]] = i
+    
+    return answer
