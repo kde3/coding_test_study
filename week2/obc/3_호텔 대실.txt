@@ -1,0 +1,31 @@
+# 호텔 대실
+
+def solution(book_time):
+    events = []
+
+    for start, end in book_time:
+        start_time = int(start[:2]) * 60 + int(start[3:]) # 입실 시간 분 단위로 변경
+        end_time = int(end[:2]) * 60 + int(end[3:]) + 10 # 퇴실 시간 분 단위로 변경 + 청소시간
+        events.append((start_time, 1)) # 입실 이벤트 
+        events.append((end_time, -1)) # 퇴실 이벤트
+
+
+    events.sort(key=lambda x: (x[0], x[1]))
+
+    max_rooms = 0
+    rooms = 0
+
+    print(events)
+
+    # 최대 연속으로 얼마나 많은 방이 들어온건지 확인하는게 가장 중요 
+    # 단 해당 방식이 가능한건 모든 방의 조건이 다 같아야 한다는 것 
+    for time, event in events:
+        rooms += event 
+        max_rooms = max(max_rooms, rooms)
+
+    return max_rooms    
+
+
+book_time = [["15:00", "17:00"], ["16:40", "18:20"], ["14:20", "15:20"], ["14:10", "19:20"], ["18:20", "21:20"]]
+
+solution(book_time)
