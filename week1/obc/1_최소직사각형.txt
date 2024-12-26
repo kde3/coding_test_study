@@ -1,0 +1,27 @@
+# 최소직사각형 20분
+def solution(sizes):
+    mx_right, mx_left = 0,0
+
+    for right, left in sizes:
+        if (right < left):
+            right, left = left, right
+        if(mx_right < right):
+            mx_right = right
+        if(mx_left < left):
+            mx_left = left
+
+    return mx_right * mx_left
+
+sizes = [[60, 50], [30, 70], [60, 30], [80, 40]]
+solution(sizes)
+
+
+# 최소직사각형 (max,min을 사용하는 방법)
+def solution(sizes):
+    mx_right, mx_left = 0, 0
+    for w, h in sizes:
+        mx_right = max(mx_right, max(w, h))  # 더 큰 값을 최대 가로에 업데이트
+        mx_left = max(mx_left, min(w, h))   # 더 작은 값을 최대 세로에 업데이트
+    return mx_right * mx_left
+sizes = [[60, 50], [30, 70], [60, 30], [80, 40]]
+solution(sizes)

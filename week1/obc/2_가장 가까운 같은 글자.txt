@@ -1,0 +1,37 @@
+# 가장 가까운 같은 글자 30분
+def solution(s):
+
+    list_s = list(s)
+    result = [-1] * len(list_s)
+    count = 0
+
+    for index, value in enumerate(list_s):
+        for i in reversed (range(0,index)):
+            count+=1
+            if(list_s[i]==value):
+                result[index] = count
+                break
+        count=0
+    return result
+
+s = "foobar"
+solution(s)
+
+
+# 가장 가까운 같은 글자 (해쉬맵 사용)
+def solution(s):
+    last_seen = {}  # 문자의 마지막 등장 위치를 저장할 딕셔너리
+    result = []
+
+    for index, char in enumerate(s):
+        print(index)
+        if char in last_seen:
+            result.append(index - last_seen[char])  # 현재 위치 - 마지막 등장 위치
+        else:
+            result.append(-1)  # 이전에 등장한 적이 없는 경우
+        last_seen[char] = index  # 현재 문자의 위치 업데이트
+
+    return result
+
+s = "foobar"
+solution(s)
