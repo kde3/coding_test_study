@@ -1,0 +1,114 @@
+#초기 아이디어
+#모든 가능한 점수 배치를 다 고려해야하기 때문에 dfs라고 생각했음
+
+max_winp = 0
+max_winc = []
+def solution(n, info):
+    global max_winp
+    global max_winc
+    
+    ryan = [0]*11
+    
+    def dfs(cur,i,m):
+        global max_winp
+        global max_winc
+        if i == m:
+            win, data, point = comp(cur,info)
+            if not win:
+                return
+            if max_winp < point:
+                max_winp = point
+                max_winc = [data]
+            elif max_winp == point:
+                max_winc.append(data)
+            else:
+                return
+            return
+        else:
+            for j in range(11):
+                nc = cur.copy()
+                nc[j] += 1
+                dfs(nc,i+1,m)
+    
+    def comp(ry,ap):
+        rp = []
+        pp = []
+        for i in range(11):
+            if ry[i] == ap[i] and ry[i] == 0:
+                continue
+            if ry[i] > ap[i]:
+                rp.append(10-i)
+            else:
+                pp.append(10-i)
+        return (sum(rp)-sum(pp) > 0,ry,sum(rp))
+                
+    dfs(ryan,0,n)
+    max_winc = sorted(max_winc, key = lambda x: tuple(x[::-1]))
+    answer = [-1] if max_winp == 0 else max_winc[0]
+    return answer
+
+# 그러나 하나씩 케이스가 많아져서 시간초과가 잘남
+
+# 인터넷 검색하자...
+(참고 링크 : https://velog.io/@syong_e/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%A8%B8%EC%8A%A4-%EC%96%91%EA%B6%81%EB%8C%80%ED%9A%8CDFS-%ED%8C%8C%EC%9D%B4%EC%8D%AC)
+-> 한발씩 볼게 아니라, 각 칸에서 점수를 따려면 어피치가 쏜거보다 1점씩만 더 쏘면 된다.
+-> 원리를 이해한 뒤 복붙하긴 했지만, 정렬 쪽에서 개선의 여지가 보여서 개선.
+
+def solution(n, info):
+    global max_gap, answer
+    
+    answer = [-1]
+    score = [0]*11
+    max_gap=0
+    
+    def is_winner_with_gap(score):
+        a=0 # 어피치 점수
+        b=0 # 라이언 점수
+        
+        for i in range(len(info)):
+            if info[i] > 0 or score[i] > 0:
+                if info[i]>=score[i]:
+                    a += (10-i)
+                else:
+                    b += (10-i)
+        return (b > a, abs(a-b))
+
+    def dfs(tp, cnt):
+        global max_gap, answer
+        if tp == 11 or cnt == 0:    
+            is_winner, gap = is_winner_with_gap(score)
+            if is_winner:
+                if cnt >= 0: # 화살이 남은 경우
+                    score[10] = cnt # 0점에 쏴도 이김
+                
+                if gap > max_gap: # 점수차가 더 크니까 업데이트
+                    max_gap = gap
+                    answer = [score.copy()]
+                    
+                elif gap == max_gap: # 일단 동점인것들 다 모아두기
+                    answer.append(score.copy())
+                    
+            return
+        
+        # k점을 어피치보다 많이 맞추거나 아예 안맞추거나
+        # L점을 먹기로 작정하고 어피치보다 1발 더
+        if cnt>info[tp]:
+            score[tp]=info[tp]+1
+            dfs(tp+1, cnt-(info[tp]+1))
+            score[tp]=0
+            
+        # L점 안먹고 0발
+        dfs(tp+1, cnt)
+    
+    dfs(0,n)
+    if answer != [-1]:
+        answer = sorted(answer, key=lambda x:tuple(x[::-1]), reverse=True)[0]
+
+    return answer
+
+# dfs로 해결한다
+# 각 상황마다 점수를 계산해서 비교한다
+# global 변수를 이용해서 최대 점수차가 갱신될때마다 새로 값을 넣어준다
+# 최대 점수차 조합이 여러개면 가장 낮은 점수를 많이 맞추는 조합을 찾는다
+
+여기까지는 잘 접근했지만, dfs의 경우의 가짓수를 줄이는데에서 생각하기가 어려웠음.

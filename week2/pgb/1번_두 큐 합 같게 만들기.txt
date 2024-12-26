@@ -1,0 +1,100 @@
+# 매 상황에서 할 수 있는 행동은 2가지
+# 1번 큐 pop -> 2번 큐 append // 2번 큐 append -> 1번 큐 append
+# 최소 이동 횟수니까 bfs가 맞음
+def solution(queue1, queue2):
+    level = 0
+    status = [(queue1,queue2)]
+    done = set()
+    done.add((tuple(queue1),tuple(queue2)))
+    found = False
+    while(len(status) != 0):
+        if found == True:
+            break
+        level += 1
+        l = len(status)
+        for _ in range(l):
+            c1_t1, c1_t2 = status.pop(0)
+            c2_t1 = c1_t1.copy()
+            c2_t2 = c1_t2.copy()
+            if len(c1_t2) > 0:
+                c1_t1.append(c1_t2.pop(0))
+                if (tuple(c1_t1),tuple(c1_t2)) not in done:
+                    status.append((c1_t1, c1_t2))
+                    done.add((tuple(c1_t1),tuple(c1_t2)))
+            if len(c2_t1) > 0:    
+                c2_t2.append(c2_t1.pop(0))
+                if (tuple(c2_t1),tuple(c2_t2)) not in done:
+                    status.append((c2_t1, c2_t2))
+                    done.add((tuple(c2_t1),tuple(c2_t2)))
+            if (sum(c1_t1) == sum(c1_t2) or sum(c2_t1) == sum(c2_t2)):
+                found = True
+                break
+    answer = level if found else -1
+    return answer
+
+-> 정확성은 거의 맞지만, 시간초과 이슈가 발생
+
+인터넷 참고 후 맞는 방향성을 찾았으나,
+이게 실제로 증명이 되는 방법인지에 대해서 의문점이 있긴 함.
+
+def solution(queue1, queue2):
+    l = len(queue1)
+    answer = -1
+    if (sum(queue1) + sum(queue2)) % 2 == 1:
+        return -1
+    for i in range(l*3):
+        if sum(queue1) < sum(queue2):
+            queue1.append(queue2.pop(0))
+        elif sum(queue1) > sum(queue2):
+            queue2.append(queue1.pop(0))
+        else:
+            answer = i
+            break
+    
+    return answer
+
+이 큐 사이의 연산을 해서 나올수 있는 모든 큐의 경우의 수를 지정할 수가 없음
+자료 구현용 코드
+log = []
+number = 0
+max_type = 0
+checked = False
+
+def dfs(a,b,i,limit):
+  global log, number,max_type,checked
+  if(i > limit):
+    return
+  
+  if(len(log) == max_type and not checked):
+    number = i
+    checked = True
+
+  if(len(a) != 0):
+    na = a.copy()
+    nb = b.copy()
+    nb.append(na.pop(0))
+    if (na,nb) not in log and (nb,na) not in log:
+      log.append((na,nb))
+      dfs(na,nb,i+1,limit)
+  
+  if(len(b) != 0):
+    na = a.copy()
+    nb = b.copy()
+    na.append(nb.pop(0))
+    if (na,nb) not in log and (nb,na) not in log:
+      log.append((na,nb))
+      dfs(na,nb,i+1,limit)
+  return
+
+for i in range(1,13): #여기 숫자만 바꾸면 됨
+  q1 = [x-3 for x in range(i)]
+  q2 = [x*2 for x in range(i)]
+  log = []
+  number = 0
+  max_type = 2*(i**2)+i
+  checked = False
+  dfs(q1,q2,0,10000)
+  print('----------------------------')
+  print(f'입력값 큐의 원소 개수 : {i}')
+  print(f'총 가능한 큐의 상태 개수 : {len(log)}')
+  print(f'그 모든 경우를 고려하기 위해 필요한 최소 행동 수 : {number}')

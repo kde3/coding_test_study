@@ -1,0 +1,21 @@
+# 큐조차도 안쓰고 끝나는 문제
+# 퇴실 후 10분의 청소시간을 합산해서 계산해야하는 문제
+def solution(book_time):
+    
+    cont_clean = []
+    for i in book_time:
+        s,e = [list(map(int,x.split(":"))) for x in i]
+        cont_clean.append((s[0]*60+s[1],e[0]*60+e[1]+10))
+    
+    times = sorted(list(set([x for rows in cont_clean for x in rows])))
+    
+    answer = 0
+    tmp = 0
+    for t in times:
+        ins = [x for x in cont_clean if x[0] == t]
+        outs = [x for x in cont_clean if x[1] == t]
+        tmp -= len(outs)
+        tmp += len(ins)
+        answer = max(tmp,answer)
+    
+    return answer
