@@ -1,0 +1,88 @@
+def graph_shape(e,edges):
+    queue=[e]
+    visited = []
+    start_at_v = {e[1]:0}
+    #print(queue)
+    while(len(queue) > 0):
+        cur = queue.pop(0)
+        for x in edges:
+            if x[0] == cur[1] and not x in visited:
+                if start_at_v.get(x[1]) == None:
+                    start_at_v[x[1]] = 0
+                start_at_v[x[0]] += 1
+                queue.append(x)
+                visited.append(x)
+                
+    print(start_at_v)
+    cmp = start_at_v.values()
+    if 0 in cmp:
+        return "막대"
+    elif 2 in cmp:
+        return "8자"
+    else:
+        return "도넛"
+
+def solution(edges):
+    starts = [x[0] for x in edges]
+    s_type = list(set(starts))
+    ends = [x[1] for x in edges]
+    e_type = list(set(ends))
+    
+    only_start = [x for x in s_type if x not in e_type and starts.count(x)>=2]
+    
+    A1 = only_start[0]
+    #print(A1)
+    graphs_start = [x for x in edges if x[0] == A1]
+    #print(graphs_start)
+    graph_count = {"도넛" : 0, "막대" : 0, "8자" : 0}
+    
+    for x in graphs_start:
+        #print(graph_shape(x,edges))
+        graph_count[graph_shape(x,edges)] += 1
+    #print(list(graph_count.values()))
+    answer = [A1]
+    answer.extend(graph_count.values())
+    return answer
+
+1) start에만 있는 걸 골라낸다 -> 출력할 정점
+2) start에서 이어진 정점들에서 bfs 비스무리하게 돌려서 해당 그래프의 원소를 찾아낸다
+3) 원소의 정보를 이용해 그래프 모양을 판별한다
+이게 원래인데...
+아무래도 O(n^2)으로 해서 문제가 생긴거 같다....
+
+더 쉽게 하려면?
+출발과 도착 정보만 알아도 되나?
+
+def solution(edges):
+    
+    infos = {}
+    
+    for x in edges:
+        if infos.get(x[0]) == None:
+            infos[x[0]] = [1,0]
+        else:
+            infos[x[0]][0] += 1
+        if infos.get(x[1]) == None:
+            infos[x[1]] = [0,1]
+        else:
+            infos[x[1]][1] += 1
+    se_list = list(infos.items())        
+    answer = [[x[0],x[1][0]] for x in se_list if x[1][1] == 0 and x[1][0] >= 2][0]
+    
+    for x in edges:
+        if x[0] == answer[0]:
+            infos[x[1]][1] -= 1
+    
+    st_ei = [0,0]
+    for x in se_list:
+        if x[1][0] == 0:
+            st_ei[0] += 1
+        if x[1][0] == 2 and x[0] != answer[0]:
+            st_ei[1] += 1
+    answer[1] -= sum(st_ei)
+    answer.extend(st_ei)
+    
+    return answer
+
+출발과 도착 정보만 알아도 유추가 가능.
+가능한 for문이 도는 pool을 줄이기 위해 edges를 직접 탐색하는건 최소한으로 줄임.

@@ -1,0 +1,58 @@
+처음 생각했던 원리
+
+주문한 내용을 보고 거기에서 나오는 조합을 이용해서 풀자
+
+def split_in_n(orders,n):
+    ret = []
+    for order in orders:
+        if len(order) < n:
+            continue
+        elif len(order) == n:
+            ret.append(order)
+        else:
+            for i in range(0,len(order)-n+1):
+                ret.append(order[i:i+n])
+    return [list(x) for x in ret]
+
+def contains_all(base,comp):
+    for let in comp:
+        if let in base:
+            continue
+        else:
+            return False
+    return True
+
+def solution(orders, course):
+    answer = []
+    
+    for n in sorted(course,reverse=True):
+        ans_tmp = []
+        tmp = split_in_n(orders,n)
+        
+        for cmp in tmp:
+            cnt = 0
+            for b in orders:
+                if contains_all(b,cmp):
+                    cnt += 1
+            if cnt >= 2 and not any(("".join(sorted(cmp)) in x) for x in ans_tmp):
+                ans_tmp.append((cnt,"".join(sorted(cmp))))
+        ans_by_n = [x[1] for x in ans_tmp if x[0] == max([x[0] for x in ans_tmp])]
+        answer.extend(ans_by_n)
+
+    return sorted(answer)
+
+-> 테스트는 통과하지만 제출하면 실패가 더 많음
+(ABCFG와 ADC에 AC도 해당되듯이, 연속해서 자를수가 없을때도 안됨)
+
+-> 그럼 풀을 다시 만들어주면 되네?
+
+def cases_with_len_n(orders,n):
+    tmp = set([x for let in orders for x in let])
+    return list(combinations(list(tmp),n))
+이걸로 대조군 풀을 다시 만들어줌
+
+-> 원리는 맞는데 3문제 시간초과
+
+인터넷을 뒤진 결과 원리 자체는 맞았음.
+다만, 코스 조합의 풀(tmp)을 만드는 과정에서,
+"입력값 전체에서 나온 문자들로 조합하기" vs "order별로 문자를 조합하기"의 차이가 있었음.
