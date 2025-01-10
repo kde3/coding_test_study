@@ -1,0 +1,26 @@
+스택을 쓰면 간편한 문제
+
+def solution(board, moves):
+    v_board = []
+    for i in range(len(board[0])):
+        v_board.append([x[i] for x in board if x[i] != 0])
+    
+    bag = [-1]
+    answer = 0
+    for pk in moves:
+        if len(v_board[pk-1]) == 0:
+            continue
+        inhand = v_board[pk-1].pop(0)
+        
+        if bag[-1] != inhand:
+            bag.append(inhand)
+        else:
+            bag.pop(-1)
+            answer += 2
+    return answer
+
+1) 기계 관리가 편하도록, 입력받은 board를 변환
+- 원소 list가 가로가 아닌 세로를 표현하도록
+
+2) moves에 따라서 담을 스택에 넣기
+(넣을때 맨 바깥쪽 걸 보고 다르면 append, 같으면 같이 터트리게 pop)

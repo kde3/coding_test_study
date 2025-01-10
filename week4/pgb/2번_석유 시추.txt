@@ -1,0 +1,137 @@
+내려갈때마다 bfs를 쓰면 된다고 생각했는데...
+def solution(land):   
+    
+    def find_pet(start):
+        q = [start]
+        vis = [start]
+        dx,dy = [1,-1,0,0],[0,0,1,-1]
+        while q:
+            tmp = q.pop(0)
+            for i in range(4):
+                ny = tmp[0]+dy[i]
+                nx = tmp[1]+dx[i]
+                if ny < 0 or nx < 0 or ny >= len(land) or nx >= len(land[0]):
+                    continue
+                if land[ny][nx] == 1 and (ny,nx) not in vis:
+                    q.append((ny,nx))
+                    vis.append((ny,nx))
+        return len(vis),[x[0] for x in vis if x[1] == start[1]]
+    
+    answer = 0
+    for i in range(len(land[0])):
+        pre_checked = []
+        cnt = 0
+        for j in range(len(land)):
+            if land[j][i] == 1 and j not in pre_checked:
+                c,pre = find_pet((j,i))
+                cnt += c
+                pre_checked.extend(pre)
+        answer = max(cnt,answer)
+    
+    return answer
+
+정확도는 되는데 효율성이 안되네?
+bfs의 배신이라고 봐도 될듯
+
+한줄의 길이를 n이라고 할때, 이미 for문 한번 내려가는데 n^2에, bfs도 사방팔방 다 다니니까 n^2이라 너무 커지는구나
+
+-> 관점을 바꾸자
+시추선이 파내려갈때 얻는 석유가 아니라,
+여기 있는 석유는 몇번에서 팔때 얻을수 있는지로
+
+
+#석유 있으면 1, 없으면 0 고정
+from collections import deque
+
+def solution(land):   
+    global pets,ly,lx
+    pets = []
+    ly = len(land)
+    lx = len(land[0])
+    for y in range(ly):
+        for x in range(lx):
+            if land[y][x] == 1:
+                pets.append((y,x))
+    
+    def find_pet(start):
+        global pets,ly,lx
+        q = deque([start])
+        vis = [start]
+        dx,dy = [1,-1,0,0],[0,0,1,-1]
+        while q:
+            tmp = q.popleft()
+            for i in range(4):
+                ny = tmp[0]+dy[i]
+                nx = tmp[1]+dx[i]
+                if ny < 0 or nx < 0 or ny >= ly or nx >= lx:
+                    continue
+                if land[ny][nx] == 1 and (ny,nx) not in vis:
+                    q.append((ny,nx))
+                    vis.append((ny,nx))
+                    pets.remove((ny,nx))
+        xs = [x[1] for x in vis]
+        return len(vis),min(xs),max(xs)
+    
+    ans = [0]*lx
+    while pets:
+        amount,mx,Mx = find_pet(pets.pop())
+        for r in range(mx,Mx+1):
+            ans[r] += amount    
+    return max(ans)
+
+
+
+from collections import deque
+
+def solution(land):   
+    global pets,ly,lx
+    pets = []
+    ly = len(land)
+    lx = len(land[0])
+    for y in range(ly):
+        for x in range(lx):
+            if land[y][x] == 1:
+                pets.append((y,x))
+    
+    def find_pet(start):
+        global pets,ly,lx
+        q = deque([start])
+        vis = [start]
+        dx,dy = [1,-1,0,0],[0,0,1,-1]
+        while q:
+            tmp = q.popleft()
+            for i in range(4):
+                ny = tmp[0]+dy[i]
+                nx = tmp[1]+dx[i]
+                if ny < 0 or nx < 0 or ny >= ly or nx >= lx:
+                    continue
+                if land[ny][nx] == 1 and (ny,nx) not in vis:
+                    q.append((ny,nx))
+                    vis.append((ny,nx))
+                    pets.remove((ny,nx))
+        xs = [x[1] for x in vis]
+        return len(vis),min(xs),max(xs)
+    
+    chng = []
+    while pets:
+        amount,mx,Mx = find_pet(pets.pop())
+        chng.append((mx,amount))
+        chng.append((Mx+1,-amount))
+    
+    chng.sort()
+    answer = 0
+    tmp = 0
+    for x in range(lx):
+        if not chng:
+            break
+        while chng[0][0] == x:
+            tmp += chng.pop(0)[1]
+        answer = max(answer,tmp)
+        
+    return answer
+
+확실하다
+이거 효율성 테스트가 구린거다
+분명 2차원 전체탐색 bfs를 하는것보다
+내가 했던 석유부터 찾아놓고 그 안에서 bfs 때리는 거랑
+내쪽이 더 유리함.

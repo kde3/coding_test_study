@@ -1,0 +1,96 @@
+# 메뉴 리뉴얼 combinations 사용 (같은 요소의 순서가 바뀌는건 중복임으로 취급하지 않음)
+from itertools import combinations
+from collections import Counter
+
+def solution(orders, course):
+    result = []  # 최종 결과를 저장할 리스트
+
+    # 1. 각 코스의 길이에 대해 처리
+    for course_len in course:
+        combs = []  # 현재 코스 길이에서 나올 수 있는 모든 조합 저장
+
+        # 2. 각 주문에서 조합 생성
+        for order in orders:
+            # 주문을 정렬한 뒤 해당 길이의 조합 생성 [('A', 'B'), ('A', 'C'), ('A', 'F')....]
+            combs += combinations(sorted(order), course_len)
+            print(combs)
+
+        # 3. 조합 빈도를 계산
+        comb_counter = Counter(combs)  # 각 조합의 빈도를 계산 (딕셔너리 형태)
+        print(comb_counter)
+
+        # 4. 가장 많이 주문된 조합 찾기
+        if comb_counter:  # 빈 카운터를 체크
+            max_count = max(comb_counter.values())  # 가장큰 values 값을 구해야함 (보통 max 는 key 를 기준으로 함)
+
+            # 최소 2번 이상 주문된 조합만 포함
+            if max_count >= 2:
+                for comb, count in comb_counter.items():
+                    if count == max_count:
+                        # 조합을 문자열로 변환하여 결과에 추가
+                        result.append(''.join(comb))
+
+    # 5. 결과를 알파벳 순으로 정렬
+    return sorted(result)
+
+# 예제 입력
+orders = ["ABCFG", "AC", "CDE", "ACDE", "BCFG", "ACDEH"]
+course = [2, 3, 4]
+
+# 함수 실행
+solution(orders, course)
+
+#-----------------------------------------------------------------------------------------
+
+# 메뉴 리뉴얼 
+def solution(orders, course):
+    result = []  # 최종 결과를 저장할 리스트
+
+    for course_len in course:
+        combs = {}  # 현재 코스 길이에서 나올 수 있는 모든 조합과 빈도를 저장
+
+        for order in orders:
+            sorted_order = sorted(order)  # 손님 한명의 시킨 메뉴 정렬 예) ['A', 'B', 'C', 'F', 'G']
+            orders_len = len(sorted_order) # 손님 한명의 메뉴 수  예) 5
+
+            # 조합 생성
+            def create_combinations(idx, current_comb):
+
+                if len(current_comb) == course_len:
+                    comb_str = ''.join(current_comb)
+                    if comb_str in combs:
+                        combs[comb_str] += 1
+                    else:
+                        combs[comb_str] = 1
+                    return
+                print(combs)
+                for i in range(idx, orders_len):
+                    create_combinations(i + 1, current_comb + [sorted_order[i]])
+
+            create_combinations(0, []) # 처음 시작
+
+        if combs:  # 빈 딕셔너리 체크
+            max_count = max(combs.values()) # 조합중 가장 많이 시킨것
+            
+            # 최소 2명 이상의 손님으로부터 주문된 조합만
+            if max_count >= 2:
+                for comb, count in combs.items():
+                    # 조합중 가장 많이 시킨것만 추가 
+                    if count == max_count:
+                        result.append(comb)
+
+    # 4. 결과를 알파벳 순으로 정렬
+    return sorted(result)
+
+# 예제
+orders = ["ABCFG", "AC", "CDE", "ACDE", "BCFG", "ACDEH"]
+course = [2, 3, 4]
+
+# 함수 실행
+solution(orders, course)
+
+
+
+
+
+

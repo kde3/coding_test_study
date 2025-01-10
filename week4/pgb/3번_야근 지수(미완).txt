@@ -1,0 +1,32 @@
+결국 works에서 n를 적당히 분배해서 빼고,
+각 원소의 제곱의 합이 최소가 되도록
+
+-> a+b+c = k일때, 각 제곱의 합이 최소가 되려면 a=b=c를 향해 가는 그리디 알고리즘
+
+def solution(n, works):
+
+    left_work = sum(works)-n
+    
+    if(len(works) == 1):
+        return (max(works[0]-n,0)**2)
+    
+    if sum(works) < n:
+        return 0
+    
+    for _ in range(n):
+        m = works.index(max(works))
+        works[m] -= 1
+        
+    answer = sum([x**2 for x in works])
+    return answer
+
+-> n번동안 최대값을 찾아서 1씩 빼기
+n이 백만번인데다 works로 5만이면 max 찾는것도 일이다 일
+
+이분탐색으로 몇 이상이면 뺄지를 정하면 되나...??
+
+->결국 못풀었음
+나온 아이디어는
+1) 하나씩 뺀다
+2) 이분탐색으로 어느거부터 얼만큼 빼야할지 정한다
+이거밖에 생각이 안돼...
