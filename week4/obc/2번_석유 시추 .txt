@@ -1,0 +1,58 @@
+# 석유 시추 
+def solution(land):
+    n = len(land) # 세로
+    m = len(land[0]) # 가로
+    
+    # 방향: 상, 하, 좌, 우
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    
+    # 방문 여부 및 덩어리 크기 저장
+    visited = [[False] * m for _ in range(n)]
+    oil_chunks = []
+    # 덩어리 표시
+    chunk_map = [[-1] * m for _ in range(n)]
+
+    def dfs(x, y, chunk_id):
+        stack = [(x, y)]
+        size = 0
+        while stack:
+            cx, cy = stack.pop()
+            if visited[cx][cy]:
+                continue
+            visited[cx][cy] = True
+            chunk_map[cx][cy] = chunk_id
+            size += 1
+            for dx, dy in directions:
+                nx, ny = cx + dx, cy + dy
+                if 0 <= nx < n and 0 <= ny < m and not visited[nx][ny] and land[nx][ny] == 1:
+                    stack.append((nx, ny))
+        return size
+    
+    # 석유 덩어리 식별 및 크기 계산
+    chunk_id = 0
+    for i in range(n):
+        for j in range(m):
+            if land[i][j] == 1 and not visited[i][j]:
+                size = dfs(i, j, chunk_id)
+                oil_chunks.append(size)
+                chunk_id += 1
+    
+    # 각 열에 시추관을 설치했을 때 얻을 수 있는 석유량 계산
+    max_oil = 0
+    for col in range(m):
+        seen_chunks = set()
+        total_oil = 0
+        for row in range(n):
+            if land[row][col] == 1: # 기름이 있을경우
+                chunk_idx = chunk_map[row][col] # 기름 번호
+                if chunk_idx not in seen_chunks: # 이미 본 기름이 아닐경우
+                    seen_chunks.add(chunk_idx)
+                    total_oil += oil_chunks[chunk_idx] # 해당하는 덩어리 번호의 기름덩어리 크기 저장
+                    print(oil_chunks)
+
+        max_oil = max(max_oil, total_oil) # 여러 방법중 가장 큰 기름 덩어리 발견하는 방법 반환 
+    
+    return max_oil
+
+land = [[0, 0, 0, 1, 1, 1, 0, 0], [0, 0, 0, 0, 1, 1, 0, 0], [1, 1, 0, 0, 0, 1, 1, 0], [1, 1, 1, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 1, 1]]
+solution(land)

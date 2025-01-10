@@ -1,0 +1,30 @@
+# 야근 지수
+import heapq
+
+def solution(n, works):
+   
+    # 전체 작업량의 합이 n보다 작거나 같으면 피로도는 0
+    if sum(works) <= n:
+        return 0
+
+    # 가장 큰 작업량을 뽑아내기 위해서 힙을 음수로 변환하여 사용
+    max_heap = [-work for work in works]
+    # 리스트 힙으로 변환
+    heapq.heapify(max_heap)
+    print(max_heap)
+
+    # 퇴근까지 남은 시간을 사용하여 작업량을 줄임
+    while n > 0: # 남은 퇴근시간 0 이면 종료
+        # 가장 큰 작업량을 가져와 1 줄임
+        max_work = heapq.heappop(max_heap)
+        max_work += 1  # 음수이므로 1을 더함
+        heapq.heappush(max_heap, max_work)  # 줄인 작업량을 다시 힙에 추가
+        n -= 1 # 남은 시간 사용
+
+    # 남은 작업량의 제곱 합 계산
+    return sum(work ** 2 for work in max_heap)
+
+# 예제
+n = 4 # 퇴근 까지 남은 시간
+works = [4, 3, 3] # 작업량 리스트
+solution(n, works) # 결과: 12
