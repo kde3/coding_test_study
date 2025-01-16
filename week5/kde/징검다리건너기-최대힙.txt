@@ -1,0 +1,23 @@
+from heapq import heappop, heappush
+def solution(stones, k):
+    queue = []
+    answer = -int(1e11)
+    
+    # 1. 초기화
+    for i in range(k-1) :
+        heappush(queue, (-stones[i], i))
+   
+    # 2. 각 구간에서의 최댓값 중, 최솟값을 찾는다.
+    for i in range(k-1, len(stones)) :
+        heappush(queue, (-stones[i], i))
+        
+        val, idx = 0, 0
+        while True :
+            val, idx = heappop(queue)
+            if i-k < idx :
+                break
+        
+        answer = max(answer, val) # 최솟값 구하기        
+        heappush(queue, (val, idx))
+        
+    return -answer
