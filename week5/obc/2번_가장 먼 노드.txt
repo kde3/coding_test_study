@@ -1,0 +1,39 @@
+# 가장 먼 노드
+from collections import deque
+
+def solution(n, vertex):
+    # 인접 리스트 생성
+    graph = [[] for _ in range(n + 1)]
+    print(graph)
+    for a, b in vertex:
+        graph[a].append(b)
+        graph[b].append(a)
+        print(graph)
+    print(graph)
+    
+    # BFS를 위한 큐 초기화
+    queue = deque([1])
+    # 각 노드까지의 거리를 저장하는 리스트 초기화
+    distances = [-1] * (n + 1)
+    distances[1] = 0  # 시작 노드의 거리는 0
+    print(distances)
+
+    # BFS 수행
+    while queue:
+        current = queue.popleft()
+        for neighbor in graph[current]:
+            if distances[neighbor] == -1:  # 방문하지 않은 노드인 경우
+                distances[neighbor] = distances[current] + 1
+                queue.append(neighbor)
+            print(distances)    
+            print(queue)
+
+    # 가장 먼 거리 계산
+    max_distance = max(distances)
+    print(max_distance)
+    # 가장 먼 거리를 가진 노드의 개수 계산
+    return distances.count(max_distance)
+
+n = 6
+vertex = [[3, 6], [4, 3], [3, 2], [1, 3], [1, 2], [2, 4], [5, 2]]
+solution (n, vertex)

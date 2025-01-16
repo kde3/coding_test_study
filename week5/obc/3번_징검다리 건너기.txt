@@ -1,0 +1,31 @@
+# 징검다리 건너기 (이분탐색)
+def solution(stones, k):
+    # 이분 탐색 범위 설정
+    left, right = 1, max(stones)
+    # left: 1 (최소 건널 수 있는 경우)
+    # right: 5 (최대 건널 수 있는 경우)
+
+    while left <= right:
+        mid = (left + right) // 2  # 중간값 설정 (!!!반을 나눠서 탐색)
+        zero_count = 0  # 연속된 0의 개수
+
+        # 현재 mid명이 건널 수 있는지 확인
+        for stone in stones:
+            if stone - mid <= 0:  # 디딤돌이 0 이하가 되면 건널 수 없음
+                zero_count += 1
+                if zero_count >= k:  # 연속된 0의 길이가 k 이상이면 중단
+                    break
+            else:
+                zero_count = 0  # 연속되지 않은 경우 초기화
+
+        # 조건에 따라 이분 탐색 범위 조정
+        if zero_count >= k:  # mid명이 건널 수 없는 경우
+            right = mid - 1
+        else:  # mid명이 건널 수 있는 경우
+            left = mid + 1
+
+    return left
+
+stones = [2, 4, 5, 3, 2, 1, 4, 2, 5, 1]
+k = 3
+solution(stones, k)
