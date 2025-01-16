@@ -1,0 +1,58 @@
+제일 통상적인 방법은 BFS가 맞음.
+BFS를 이용해서 밝혀나가는거임.
+
+from collections import deque
+def solution(n, edge):
+    
+    start = 1
+    visited = {1:0}
+    q = deque([1])
+    
+    ed = deque(edge)
+    
+    while q:
+        now = q.popleft()
+        for _ in range(0,len(ed)):
+            e = ed.popleft()
+            if e[0] == now and visited.get(e[1]) == None:
+                q.append(e[1])
+                visited[e[1]] = visited[e[0]] + 1
+            elif e[1] == now and visited.get(e[0]) == None:
+                q.append(e[0])
+                visited[e[0]] = visited[e[1]] + 1
+                edge.remove(e)
+            else:
+                ed.append(e)
+    print(visited)
+    dpth = max(visited.values())    
+    answer = len([x for x in visited.values() if x == dpth])
+    return answer
+
+edge까지도 deque을 이용해서 한번 사용한 edge는 다시 안쓰니까
+버리는 식으로 백트래킹+동적계획까지 했는데도 7,8,9 시간초과라...
+
+답을 찾아보니, bfs의 deque까지는 맞았는데,
+핵심 아이디어는 이거였음.
+
+간선들을 점별로 관리하는것.
+
+from collections import deque
+def solution(n, edge):
+    visited = {1:0}
+    q = deque([1])
+    
+    setup = [[] for _ in range(0,n+1)]
+    for e in edge:
+        setup[e[0]].append(e[1])
+        setup[e[1]].append(e[0])
+    while q:
+        now = q.popleft()
+        for n in setup[now]:
+            if visited.get(n) == None:
+                visited[n] = visited[now]+1
+                q.append(n)
+    dpth = max(visited.values())    
+    answer = len([x for x in visited.values() if x == dpth])
+    return answer
+
+해결

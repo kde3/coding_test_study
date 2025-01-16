@@ -1,0 +1,58 @@
+
+처음 생각은 그거였음
+stones를 k+2칸씩 떼서, 가장 큰 두 수가 양끝에 있으면 가능성이 있고,
+양끝을 제외한 수 중 가장 큰 수들 중 가장 작은 값이면 맞다 -> 라고 생각했음
+
+from collections import deque
+def solution(stones, k):
+    
+    #결과론적으로 찾아보면, n~n+k+1까지의 범위에서,
+    #양 끝이 제일 큰 경우를 찾아라. 그중에 3번째로 큰 수가 가장 작은 경우를 찾으면 된다.
+    end = len(stones)-1
+    candidate = []
+    tmp = deque(stones[0:k+1])
+    minimum = 2*(10**9)+1
+    
+    i = k+1
+    while i <= end:
+        tmp.append(stones[i])
+        srt = sorted(list(tmp),reverse=True)
+        cmp = srt[0:2]
+        if tmp[0] in cmp and tmp[-1] in cmp:
+            minimum = min(srt[2],minimum)
+        tmp.popleft()
+        i += 1
+    answer = minimum
+    return answer
+-> 정확성조차 실패
+
+이 이상으로는 답이 안나와서 힌트를 찾았더니 이진탐색을 써보라네?
+
+# 끝까지 건너가지면 참, 중간에 일정 이상 끊기면 거짓
+def crossable(stn,n,sq):
+    cnt = 0
+    for s in stn:
+        if s < n:
+            cnt += 1
+        else:
+            cnt = 0
+        if cnt == sq:
+            return False
+    return True
+
+#이진탐색
+def solution(stones, k):
+    low = 1
+    high = max(stones)
+    mid = (low+high+1) // 2
+    while low < high:
+        if crossable(stones,mid,k): #건널수 있다면
+            low = mid 
+            answer = mid
+        else: 
+            high = mid-1 
+        mid = (low+high+1) // 2
+    return answer
+
+아직도 mid를 어떻게 잡아야 하는지는 감이 잘 안온다...
+2로 나눴을때 반올림을 할것이냐, 버림을 할것이냐, 올림을 할것이냐 이런게 문제...
