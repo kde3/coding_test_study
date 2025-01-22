@@ -1,0 +1,46 @@
+# 입력값 범위가 너무 큼.
+# 이분탐색을 해야 n log (diffs[i])로 끝남
+
+def solution(diffs, times, limit):
+    high = max(diffs)
+    low = 1
+    
+    def calc(n):
+        ret = 0
+        for i in range(len(diffs)):
+            if i == 0:
+                ret += times[i]
+                continue 
+            if diffs[i] <= n:
+                ret += times[i]
+            else:
+                ret += ((times[i]+times[i-1])*(diffs[i]-n)+times[i])
+        return ret
+    
+    while low < high:
+        mid = (high+low) // 2
+        if calc(mid) <= limit: #널널함 -> 더 줄임
+            high = mid
+        else: #부족함 -> 높임
+            low = mid+1
+    answer = low
+    return answer
+
+        # mid -> 반올림
+        # high -> mid-1
+        # low -> mid
+    # 지난주 그문제 -> 조건에 부합하는 최대값
+    # 요 문제 -> 조건에 부합하는 최솟값
+    # 어떤 수 n이 조건에 부합을 할때, 최솟값이면 내려야 하니까, high를 바꾸는데,
+    # 당장 이 바뀐 high가 조건에 부합을 하니까, mid를 그대로
+    # (mid-1을 하면, 새로 바뀐 low~mid-1에 조건에 부합하는 애가 있다고 보장이 안된다는거)
+    
+    
+    # 반대로 찾는게 최대값이다 라고 하면은, low를 mid로 올려야 함. ->mid~high로 바꿔야지, mid+1~high로 바꾸면,
+    # 이안에 조건이 부합하는 값이 없을수도 있다.
+    
+    # mid값의 설정
+    # mid가 버림을 해야 되냐, 올림을 해야되냐 문제는,
+    # low랑 high가 mid, mid+-1 중에 뭘 썼냐에 따라 갈리는 문제라고 생각함.
+    # low만 mid+1이면 -> 버림을 하는거고
+    # high만 mid-1이면 -> 올림을 하는거고
