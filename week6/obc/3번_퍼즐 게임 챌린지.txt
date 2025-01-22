@@ -1,0 +1,49 @@
+# 3. 퍼즐 게임 챌린지
+
+def solution(diffs, times, limit):
+    # 이진 탐색을 위한 초기 범위 설정
+    left = 1
+    right = 100000
+    answer = right
+
+    # 이진 탐색 시작
+    while left <= right:
+        mid = (left + right) // 2
+        if can_solve_all_puzzles(mid, diffs, times, limit):
+            answer = mid
+            right = mid - 1  # 더 작은 숙련도가 가능한지 확인
+        else:
+            left = mid + 1  # 더 큰 숙련도가 필요한 경우
+
+    return answer
+
+def can_solve_all_puzzles(level, diffs, times, limit):
+    total_time = 0
+    n = len(diffs)
+
+    for i in range(n):
+        if diffs[i] <= level:
+            # 퍼즐을 틀리지 않고 해결
+            total_time += times[i]
+        else:
+            # 퍼즐을 여러 번 틀린 후 해결
+            mistakes = diffs[i] - level
+            if i == 0:
+                # 첫 번째 퍼즐의 이전 퍼즐 시간은 0으로 간주
+                time_prev = 0
+            else:
+                time_prev = times[i - 1]
+            total_time += mistakes * (times[i] + time_prev) + times[i]
+
+        # 현재까지의 총 시간이 제한 시간을 초과하면 False 반환
+        if total_time > limit:
+            return False
+
+    return total_time <= limit
+
+
+diffs = [1, 5, 3]
+times = [2, 4, 7]
+limit = 30
+
+solution(diffs, times, limit)

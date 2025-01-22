@@ -1,0 +1,25 @@
+# 2. 멀쩡한 사각형
+
+import math
+
+def solution(w, h):
+    # 1. 최대공약수
+    # 최대공약수(gcd)를 이용해 반복되는 패턴의 길이를 계산할 수 있음
+    gcd = math.gcd(w, h)
+
+    # 2. 전체 사각형의 개수
+    total_squares = w * h
+
+    # 3. 사용할 수 없는 사각형의 개수 계산
+    # "w + h - gcd"는 대각선이 지나가면서 겹치는 사각형의 개수를 나타냄
+    unusable_squares = w + h - gcd
+
+    # 4. 사용 가능한 사각형의 개수
+    usable_squares = total_squares - unusable_squares
+
+    return usable_squares
+
+# 예제 실행
+example_w, example_h = 8, 12
+print(solution(example_w, example_h))  # 결과값 출력
+
