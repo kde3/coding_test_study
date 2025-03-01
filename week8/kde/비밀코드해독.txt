@@ -1,0 +1,23 @@
+from itertools import combinations
+def promising(q, ans, A) :
+    for i in range(len(q)) :
+        # ans[i]에 정답 몇개 있는지 체크
+        t = 0
+        for v in range(5) :
+            if q[i][v] in A :
+                t += 1
+        
+        # ans[i]와 맞는지 확인
+        if t != ans[i] :
+            return False
+        
+    return True
+
+def solution(n, q, ans):
+    answer = 0
+    
+    for c in combinations([_ for _ in range(1, n+1)], 5) :
+        if promising(q, ans, c) :
+            answer += 1
+    
+    return answer

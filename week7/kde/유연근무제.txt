@@ -1,0 +1,23 @@
+def findMin(t) :
+    return (t // 100 * 60) + (t % 100)
+
+def solution(schedules, timelogs, startday):
+    answer = len(schedules)
+    
+    for i, s in enumerate(schedules) :
+        sd = startday - 1
+        time = findMin(s)
+        
+        for tl in timelogs[i] :
+            # 평일
+            if sd not in [5, 6] :
+                tl = findMin(tl)
+                
+                if tl > time + 10 :
+                    answer -= 1
+                    break
+
+            sd += 1
+            sd %= 7
+    
+    return answer

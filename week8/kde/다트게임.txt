@@ -1,0 +1,61 @@
+def solution(dartResult):
+    n = len(dartResult)
+    i = 0
+    
+    B = []
+    while i < n :
+        # 10점일 경우
+        if i+1 < n and dartResult[i+1] == "0" :
+            if i+3 < n and dartResult[i+3] in ["*", "#"] :
+                # print(dartResult[i:i+4])
+                A = dartResult[i:i+4]
+                B.append((A[:-1], A[-2], A[-1]))
+                i += 4
+            else :
+                # print(dartResult[i:i+3])
+                A = dartResult[i:i+3]
+                B.append((A[:-1], A[-1], "."))
+                i += 3
+            
+        # 10점이 아닐 경우
+        else:
+            if i+2 < n and dartResult[i+2] in ["*", "#"] :
+                # print(dartResult[i:i+3])
+                A = dartResult[i:i+3]
+                B.append((A[:-2], A[-2], A[-1]))
+                i += 3
+            else :
+                # print(dartResult[i:i+2])
+                A = dartResult[i:i+2]
+                B.append((A[:-1], A[-1], "."))
+                i += 2
+
+    # B = B[::-1]로도 reverse 됨
+    B.reverse()
+
+    # 계산
+    flag = False
+    result = 0
+    for a, b, c in B :
+        tmp1 = 0
+        if b == "S" :
+            tmp1 = int(a)**1
+        elif b == "D" :
+            tmp1 = int(a)**2
+        elif b == "T" :
+            tmp1 = int(a)**3
+        
+        tmp2 = 1
+        if flag :
+            tmp2 *= 2
+            flag = False
+        
+        if c == "*" :
+            flag = True
+            tmp2 *= 2
+        elif c == "#" :
+            tmp2 *= -1
+            
+        result += tmp1 * tmp2
+        
+    return result

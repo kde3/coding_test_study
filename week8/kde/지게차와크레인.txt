@@ -1,0 +1,65 @@
+from collections import deque
+
+def count(n, m, storage) :
+    cnt = 0
+    
+    for i in range(n) :
+        for j in range(m) :
+            if storage[i][j] != "." :
+                cnt += 1
+                
+    return cnt
+
+def removeAll(n, m, storage, r) :
+    for i in range(n) :
+        for j in range(m) :
+            if storage[i][j] == r :
+                storage[i][j] = "."
+
+def bfs(n, m, storage, r) :
+    points = set()
+    directions = [(0,1),(0,-1),(-1,0),(1,0)]
+    
+    queue = deque([(0, 0)])
+    visited = [[False] * m for _ in range(n)]
+    
+    # 탐색
+    while queue :
+        y, x = queue.popleft()
+        
+        for dy, dx in directions :
+            ny = dy + y
+            nx = dx + x
+        
+            if 0 <= ny < n and 0 <= nx < m and not visited[ny][nx]:
+                visited[ny][nx] = True
+                
+                if storage[ny][nx] == "." :
+                    queue.append((ny, nx))
+                elif storage[ny][nx] == r :
+                    points.add((ny, nx))
+    
+    # 제거
+    for y, x in points :
+        storage[y][x] = "."
+    
+
+def solution(storage, requests):
+    n = len(storage)
+    m = len(storage[0])
+    
+    # 전처리(가장자리 "."으로 한번 더 감쌈)
+    for i in range(n) :
+        storage[i] = ["."] + list(storage[i]) + ["."]
+    storage= [["."]*(m+2)] + storage + [["."]*(m+2)]
+    n += 2
+    m += 2
+
+    # 꺼내기
+    for r in requests :
+        if len(r) == 2 :
+            removeAll(n, m, storage, r[0])
+        else :
+            bfs(n, m, storage, r)
+            
+    return count(n, m, storage)

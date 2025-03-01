@@ -1,0 +1,31 @@
+'''
+1. 다른 칸은 물건이 없어서 B가 흔적조차 남길 수가 없어서 INF인 것.
+2. 옆 셀에 채운다는 것은 B가 흔적을 남겨서 훔친다는 것인데, 1의 흔적을 남겨서는 아무것도 못 훔치기에 그대로 INF가 들어간다.
+'''
+INF = int(1e9)
+
+def solution(info, n, m):
+    info_len = len(info)
+    dp = [[INF] * m for _ in range(info_len + 1)]
+    
+    # init
+    # 다른 칸은 물건이 없어서 B가 흔적조차 남길 수가 없어서 INF인 것.
+    dp[0][0] = 0
+    
+    for i in range(1, info_len+1) :
+        a, b = info[i-1][0], info[i-1][1]
+        
+        for j in range(m) :
+            steal_a, steal_b = INF, INF
+            
+            # A가 훔칠 때 A의 흔적
+            steal_a = dp[i-1][j] + a
+            
+            # B가 훔칠 때 A의 흔적(B는 훔칠 수 있을 때만 훔침)
+            if j-b >= 0 :
+                steal_b = dp[i-1][j-b]
+            
+            dp[i][j] = min(steal_b, steal_a)
+            
+    answer = min(dp[-1])
+    return answer if answer < n else -1
