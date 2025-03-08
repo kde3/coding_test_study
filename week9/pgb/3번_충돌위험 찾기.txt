@@ -1,0 +1,58 @@
+얼핏보면 경로찾기지만,
+
+1) 세로 이동을 가로이동보다 먼저 하고,
+2) 지도에 장애물이 없어서
+경로는 그냥 구현으로 해결 (find_rt)
+
+지나간 경로의 좌표를, 같은 열끼리 비교해서 겹친 횟수가 몇번인지 체크
+
+from collections import Counter
+
+def solution(points, routes):
+    
+    memo = {}
+    
+    def find_rt(s,d):
+        sp = points[s]
+        dp = points[d]
+        rt = []
+        r,c = sp
+        if sp[0] < dp[0]: #도착지가 더 낮을때
+            while r < dp[0]:
+                r += 1
+                rt.append((r,c))
+        else:
+            while r > dp[0]:
+                r -= 1
+                rt.append((r,c))
+        
+        if sp[1] < dp[1]: #도착지가 더 오른쪽일때
+            while c < dp[1]:
+                c += 1
+                rt.append((r,c))
+        else:
+            while c > dp[1]:
+                c -= 1
+                rt.append((r,c))
+        return rt
+    
+    rts = []
+    for k in routes:
+        st = points[k[0]-1]
+        ptrt = [(st[0],st[1])]
+        for n in range(len(k)-1):
+            ptrt += find_rt(k[n]-1,k[n+1]-1)
+        rts.append(ptrt)
+    print(rts)
+    ls = [len(x) for x in rts]
+    l = max(ls)
+    
+    answer = 0
+    
+    for i in range(l):
+        timing = [k[i] if i < len(k) else None for k in rts]
+        tmp = [k for k in timing if k is not None]
+        tf = Counter(tmp)
+        answer += len([v for v in tf.values() if v > 1])
+    
+    return answer

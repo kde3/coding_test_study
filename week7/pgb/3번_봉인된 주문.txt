@@ -1,0 +1,52 @@
+기본적인 생각
+
+1) 일단 숫자를 문자로 바꾸던가, 문자를 숫자로 바꿔야 한다.
+-> 숫자를 문자로 바꿔서 비교
+
+2) 파이썬의 문자열 대소비교는 문제의 사전순과 다름.
+(len(x), x)로 비교 조건을 설정
+
+3) 숫자를 문자로 만들고,
+만들어진 문자보다 순서상 앞인 ban의 개수만큼 n을 증가시킴
+
+4) 이 짓을 반복하다가 이전 회차에 확인한 '순서상 앞인 ban의 개수'와 이번 회차의 개수가 동일하면 스탑 -> 그게 답
+
+-> 실패도 뜨고~ 런타임 에러도 뜨고~
+
+문제는 크게 2가지
+1) 숫자를 문자로 바꾸는 로직 -> 개선
+
+4) 순서상 앞인 ban을 계속 체크할 필요가 없음 -> ban을 정렬해놓고, 하나씩 빼면서 카운트 (빠졌으니 다시 볼 필요 없음)
+
+
+def find_let(k):
+    result = []
+    while k > 0:
+        k -= 1
+        result.append(chr(k % 26 + ord('a')))
+        k //= 26
+    
+    return ''.join(result[::-1]) 
+    
+from collections import deque
+
+def solution(n, bans):
+    bn = deque(sorted([(len(x),x) for x in bans]))
+    
+    while True:
+        answer = find_let(n)
+        cnt = 0
+        l = len(answer)
+        
+        if not bn:
+            return answer
+        
+        while bn and (bn[0][0] < l or (bn[0][0] == l and bn[0][1] <= answer)):
+            bn.popleft()
+            cnt += 1
+
+        if cnt != 0:
+            n += cnt
+        else:
+            return answer
+   

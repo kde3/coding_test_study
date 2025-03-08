@@ -1,0 +1,25 @@
+기본적인 생각은
+
+1) 스케줄의 값에 10분을 더한다
+(10을 더해서 60이 넘어가는, 즉 50 이상의 값은 10+40 해서 자릿수를 올리게 50을 더한다)
+
+2) timelogs의 각 list 길이는 7이니까,
+0~6까지 for문 돌면서, startday와의 합으로 토/일을 걸러낸다
+
+3) 한 인원의 모든 날짜가 조건에 맞는지 보고 더하는것보단,
+한 날짜라도 안맞으면 전체 인원에서 빼는게 더 빠르다 생각
+
+def solution(schedules, timelogs, startday):
+    
+    schd_limit = [(x+10) if x%100 < 50 else x+50 for x in schedules]
+    answer = len(schd_limit)
+    for i in range(len(schd_limit)):
+        for j in range(7):
+            if startday+j in [6,7,13]:
+                continue
+            if timelogs[i][j] > schd_limit[i]:
+                answer -= 1
+                break
+    
+    
+    return answer

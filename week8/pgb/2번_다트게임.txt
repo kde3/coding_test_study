@@ -1,0 +1,32 @@
+사실상 정규표현식 쓰라는 문제
+
+1) 정규표현식으로 분리를 한 다음,
+2) 숫자만 따로 list로 만들고 각종 변환을 적용 후 합산
+
+import re
+
+def solution(dartResult):
+    
+    pts = re.findall(r'[0-9]+[SDT][*#]?',dartResult)
+    calc = []
+    for x in pts:
+        if x[1] == '0':
+            calc.append(10)
+        else:
+            calc.append(int(x[0]))
+    
+    for ind,x in enumerate(pts):
+        if 'D' in x:
+            calc[ind] = calc[ind]**2
+        elif 'T' in x:
+            calc[ind] = calc[ind]**3
+            
+        if '*' in x:
+            calc[ind] *= 2
+            if ind != 0:
+                calc[ind-1] *= 2
+        elif '#' in x:
+            calc[ind] *= -1
+    
+    answer = sum(calc)
+    return answer

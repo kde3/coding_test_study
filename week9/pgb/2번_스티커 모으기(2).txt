@@ -1,0 +1,26 @@
+dp는 dp인데, 처음걸 쓰면 마지막도 찢어져서 못쓰는 조건이 있음
+
+그래서 처음을 쓸때, 처음을 안쓸때 2개로 나눠서 해야됨.
+def solution(sticker):
+    l = len(sticker)
+    if l == 1:
+        return sticker[0]
+    if l == 2:
+        return max(sticker)
+    
+    use1 = [0]*(l-1)
+    notuse1 = [0]*l
+    
+    use1[0] = sticker[0]
+    use1[1] = max(sticker[0],sticker[1])
+    notuse1[1] = sticker[1]
+    notuse1[2] = max(sticker[1],sticker[2])
+    
+    for i in range(2,l-1):
+        use1[i] = max(use1[i-2]+sticker[i],use1[i-1])
+    for i in range(3,l):
+        notuse1[i] = max(notuse1[i-2]+sticker[i],notuse1[i-1])
+    
+    answer = max(use1+notuse1)
+
+    return answer

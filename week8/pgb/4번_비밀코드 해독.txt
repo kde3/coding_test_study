@@ -1,0 +1,20 @@
+# 최대 c(30,5)인데 이거 대략 14만개임
+# 그냥 해도 되겠는데
+
+from itertools import combinations
+
+def solution(n, q, ans):
+    pool = list(set(k) for k in combinations([x for x in range(1,n+1)],5))
+    
+    test = [set(x) for x in q]
+    
+    answer = 0
+    for x in pool:
+        cont = False
+        for i,t in enumerate(test):
+            if len(x&t) != ans[i]:
+                cont = True
+                break
+        if not cont:
+            answer += 1    
+    return answer

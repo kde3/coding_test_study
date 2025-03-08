@@ -1,0 +1,25 @@
+지난주에 못푼 문제
+찾아보니 dp였다고 함.
+
+어차피 최소값은 이전 최소값의 영향을 받기 때문.
+
+조건 : 훔친 물건의 개수, 그리고 b가 흘린 단서 수가 정해졌을때의 최소값
+
+def solution(info, n, m):
+    
+    INF = 200
+    
+    l = len(info)
+    
+    table = [[0 for x in range(m+3)] if x == 0 else [INF for x in range(m+3)] for x in range(l+1)]
+    
+    for i,x in enumerate(info):        
+        for j in range(m):
+         # 1) 이걸 a가 먹을때 -> 값이 올라감
+            table[i+1][j] = min(table[i][j]+x[0], table[i+1][j])
+        # 2) 이걸 b가 먹을때 -> a는 값이 안올라감
+            table[i+1][j+x[1]] = min(table[i][j],table[i+1][j+x[1]])
+    print(table)
+    answer = -1 if min(table[-1][:-3]) >= n else min(table[-1][:-3])
+    return answer
+
