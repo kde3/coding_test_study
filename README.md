@@ -97,3 +97,84 @@ https://school.programmers.co.kr/learn/courses/30/lessons/12971
 
 [3] 충돌위험 찾기
 https://school.programmers.co.kr/learn/courses/30/lessons/340211
+
+
+## 10주차 : 3/12(수)
+
+[1] 당구연습
+https://school.programmers.co.kr/learn/courses/30/lessons/169198
+
+[2] 캐시
+https://school.programmers.co.kr/learn/courses/30/lessons/17680
+
+
+## 11주차 : 3/26(수)
+
+[1] 미세먼지 안녕!
+https://www.acmicpc.net/problem/17144
+
+[2] 마법사 상어와 파이어볼
+https://www.acmicpc.net/problem/20056
+
+
+## 13주차 : 4/9(수)
+
+[1] 두 원 사이의 정수쌍
+https://school.programmers.co.kr/learn/courses/30/lessons/181187
+
+[2] 연속 펄스수열
+https://school.programmers.co.kr/learn/courses/30/lessons/161988
+
+
+## 14주차 : 4/16(수)
+
+[1] 연속 펄스수열
+https://school.programmers.co.kr/learn/courses/30/lessons/161988
+
+[2] 스타트와 링크
+https://www.acmicpc.net/problem/14889
+
+[3] 서울에서 경산까지
+https://codeup.kr/problem.php?id=4878
+
+
+## 15주차 : 4/24(목)
+
+[1] 계단 오르기 2
+https://codeup.kr/problem.php?id=3704
+
+[2] 체육복
+https://school.programmers.co.kr/learn/courses/30/lessons/42862
+
+
+## 16주차 : 4/29(화)
+
+[1] 안전 영역
+https://www.acmicpc.net/problem/2468
+
+[2] 스티커
+https://www.acmicpc.net/problem/9465
+
+
+## 17주차 : 5/7(수)
+
+[1] 포도주 시식
+https://www.acmicpc.net/problem/2156
+
+[2] 섬의 개수
+https://www.acmicpc.net/problem/4963
+
+[3] 기타 레슨
+https://www.acmicpc.net/problem/2343
+
+
+## 18주차 : 5/15(목)
+
+[1] RGB거리
+https://www.acmicpc.net/problem/1149
+
+[2] 문제집
+https://www.acmicpc.net/problem/1766
+
+[3] ACM Craft
+https://www.acmicpc.net/problem/1005
