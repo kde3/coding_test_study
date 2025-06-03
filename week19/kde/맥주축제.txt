@@ -1,0 +1,54 @@
+import heapq
+import sys
+
+def 계산(mid, n, A) :
+    result = 0
+    L = []
+
+    i = 0
+    while A and i < n:
+        a, b = heapq.heappop(A)
+        L.append((a, b))
+
+        if b <= mid :
+            result -= a
+            i += 1
+
+    for l in L:
+        heapq.heappush(A, l)
+    return result if i == n else -1
+
+def solution(n, m, k, A):
+    _sum = 0
+    L = []
+    for i in range(n):
+        a, b = heapq.heappop(A)
+        L.append((a, b))
+        _sum -= a
+    for l in L:
+        heapq.heappush(A, l)
+
+    if _sum < m:
+        return -1
+
+    s = 1
+    e = max([a for _, a in A])
+    mid = int((s+e)/2)
+
+    while e > s :
+        if 계산(mid, n, A) >= m :
+            e = mid
+        else :
+            s = mid + 1
+
+        mid = int((s+e)/2)
+
+    return mid
+
+n, m, k = map(int, sys.stdin.readline().rstrip().split())
+A = []
+for _ in range(k):
+    a, b = map(int, sys.stdin.readline().rstrip().split())
+    heapq.heappush(A, (-a, b))
+
+print(solution(n, m, k, A))
