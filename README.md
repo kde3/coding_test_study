@@ -1,5 +1,3 @@
-
-
 ## 1주차(24/12/18 수)
 [1] 최소직사각형
 https://school.programmers.co.kr/learn/courses/30/lessons/86491
@@ -180,7 +178,7 @@ https://www.acmicpc.net/problem/1766
 https://www.acmicpc.net/problem/1005
 
 
-## 18주차 : 5/15(목)
+## 19주차 : 6/4(수)
 
 [1] 장난감 조립
 https://www.acmicpc.net/problem/2637
